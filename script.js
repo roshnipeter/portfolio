@@ -333,9 +333,16 @@ function initContactForm() {
             );
             
             const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+            console.log("Constructed mailto URL:", mailtoUrl);
             
             setTimeout(() => {
-                window.location.href = mailtoUrl;
+                const mailLink = document.createElement('a');
+                mailLink.href = mailtoUrl;
+                mailLink.style.display = 'none';
+                document.body.appendChild(mailLink);
+                mailLink.click();
+                document.body.removeChild(mailLink);
+                
                 showToast('Mail client launched! Thank you.', 'success');
                 form.reset();
                 submitBtn.disabled = false;
