@@ -344,9 +344,13 @@ function initContactForm() {
                 document.body.removeChild(mailLink);
                 
                 showToast('Mail client launched! Thank you.', 'success');
-                form.reset();
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                
+                // Delay DOM reset so the browser has time to register parameter data
+                setTimeout(() => {
+                    form.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 1500);
             }, 1000);
         } else {
             showToast('Please correct the validation errors in the form.', 'error');
