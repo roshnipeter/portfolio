@@ -327,9 +327,9 @@ function initContactForm() {
             const email = "roshni.mpeter@gmail.com";
             const subject = encodeURIComponent(subjectInput.value.trim());
             const body = encodeURIComponent(
-                `Name: ${nameInput.value.trim()}\n` +
-                `Email: ${emailInput.value.trim()}\n\n` +
-                `Message:\n${messageInput.value.trim()}`
+                `Name: ${nameInput.value.trim()}\r\n` +
+                `Email: ${emailInput.value.trim()}\r\n\r\n` +
+                `Message:\r\n${messageInput.value.trim()}`
             );
             
             const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
