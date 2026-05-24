@@ -322,46 +322,25 @@ function initContactForm() {
         if (isValid) {
             submitBtn.disabled = true;
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>Sending...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+            submitBtn.innerHTML = '<span>Opening Mail Client...</span> <i class="fa-solid fa-envelope-open fa-beat"></i>';
             
-            // Web3Forms access key configuration
-            const accessKey = "YOUR_WEB3FORMS_ACCESS_KEY"; 
+            const email = "roshni.mpeter@gmail.com";
+            const subject = encodeURIComponent(subjectInput.value.trim());
+            const body = encodeURIComponent(
+                `Name: ${nameInput.value.trim()}\n` +
+                `Email: ${emailInput.value.trim()}\n\n` +
+                `Message:\n${messageInput.value.trim()}`
+            );
             
-            if (accessKey === "YOUR_WEB3FORMS_ACCESS_KEY") {
-                // Warning toast if the user has not configured the key yet
-                setTimeout(() => {
-                    showToast('Web3Forms: Please replace "YOUR_WEB3FORMS_ACCESS_KEY" in script.js to receive real emails.', 'warning');
-                    form.reset();
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }, 1200);
-                return;
-            }
+            const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
             
-            const formData = new FormData(form);
-            formData.append("access_key", accessKey);
-            
-            fetch("https://api.web3forms.com/submit", {
-                method: "POST",
-                body: formData
-            })
-            .then(async (response) => {
-                let json = await response.json();
-                if (response.status === 200) {
-                    showToast('Thank you! Your message has been sent successfully.', 'success');
-                    form.reset();
-                } else {
-                    showToast(json.message || 'Something went wrong. Please try again.', 'error');
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                showToast('Form submission failed. Please try again later.', 'error');
-            })
-            .then(() => {
+            setTimeout(() => {
+                window.location.href = mailtoUrl;
+                showToast('Mail client launched! Thank you.', 'success');
+                form.reset();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-            });
+            }, 1000);
         } else {
             showToast('Please correct the validation errors in the form.', 'error');
         }
