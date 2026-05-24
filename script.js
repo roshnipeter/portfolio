@@ -320,18 +320,48 @@ function initContactForm() {
         }
         
         if (isValid) {
-            // Simulated sending states
             submitBtn.disabled = true;
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>Sending...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
             
-            setTimeout(() => {
-                // Success feedback
-                showToast('Thank you! Your message has been sent successfully.', 'success');
-                form.reset();
+            // Web3Forms access key configuration
+            const accessKey = "YOUR_WEB3FORMS_ACCESS_KEY"; 
+            
+            if (accessKey === "YOUR_WEB3FORMS_ACCESS_KEY") {
+                // Warning toast if the user has not configured the key yet
+                setTimeout(() => {
+                    showToast('Web3Forms: Please replace "YOUR_WEB3FORMS_ACCESS_KEY" in script.js to receive real emails.', 'warning');
+                    form.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 1200);
+                return;
+            }
+            
+            const formData = new FormData(form);
+            formData.append("access_key", accessKey);
+            
+            fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status === 200) {
+                    showToast('Thank you! Your message has been sent successfully.', 'success');
+                    form.reset();
+                } else {
+                    showToast(json.message || 'Something went wrong. Please try again.', 'error');
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                showToast('Form submission failed. Please try again later.', 'error');
+            })
+            .then(() => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-            }, 1500);
+            });
         } else {
             showToast('Please correct the validation errors in the form.', 'error');
         }
